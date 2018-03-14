@@ -19,11 +19,14 @@
     "test": "ember try:each"
   },
   "dependencies": {
+    "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-babel": "^6.6.0"
   },
   "devDependencies": {
+    "bootstrap": "^3.3.7",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
+    "ember-bootstrap": "^1.2.1",
     "ember-cli": "~2.18.1",
     "ember-cli-dependency-checker": "^2.0.0",
     "ember-cli-eslint": "^4.2.1",
@@ -34,11 +37,15 @@
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^2.0.0",
+    "ember-composable-helpers": "^2.1.0",
     "ember-disable-prototype-extensions": "^1.1.2",
     "ember-export-application-global": "^2.0.0",
+    "ember-font-awesome": "^4.0.0-rc.2",
     "ember-load-initializers": "^1.0.0",
+    "ember-power-select": "^2.0.0-beta.3",
     "ember-resolver": "^4.0.0",
     "ember-source": "~2.18.0",
+    "ember-truth-helpers": "^2.0.0",
     "eslint-plugin-ember": "^5.0.0",
     "eslint-plugin-node": "^5.2.1",
     "loader.js": "^4.2.3"

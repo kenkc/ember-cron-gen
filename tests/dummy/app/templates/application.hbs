@@ -1,3 +1,10 @@
 <h2 id="title">Welcome to Ember</h2>
-
-{{outlet}}
+<div class="container">
+  {{cron-gen model=model}}
+  <div class="row container">
+    <div class="col-xs-12">
+      Generated Cron Expression:
+      <span class="text-success"><b>{{model}}</b></span>
+    </div>
+  </div>
+</div>
