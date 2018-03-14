@@ -1,0 +1,16 @@
+<div class="inline-block">
+  {{#power-select searchEnabled=false tagName="div" class="hours cron-gen-select" disabled=isDisabled selected=model.hours options=selectOptions.hours onchange=(action (mut model.hours)) as |hour| }}
+    {{hour}}
+  {{/power-select}}
+  {{#power-select searchEnabled=false tagName="div" class="minutes cron-gen-select" disabled=isDisabled selected=model.minutes options=selectOptions.minutes onchange=(action (mut model.minutes)) as |minute| }}
+    {{minute}}
+  {{/power-select}}
+  {{#power-select searchEnabled=false tagName="div" class="seconds cron-gen-select" disabled=isDisabled selected=model.seconds options=selectOptions.seconds onchange=(action (mut model.seconds)) as |second| }}
+    {{second}}
+  {{/power-select}}
+  {{#unless use24HourTime}}
+    {{#power-select searchEnabled=false tagName="div" class="hour-types cron-gen-select" disabled=isDisabled selected=model.hourType options=selectOptions.hourTypes onchange=(action (mut model.hourType)) as |hourType| }}
+      {{hourType}}
+    {{/power-select}}
+  {{/unless}}
+</div>

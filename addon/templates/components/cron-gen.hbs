@@ -1,0 +1,221 @@
+{{#bs-tab customTabs=true tagName='' activeId=activeTab onChange=(action (mut activeTab)) as |tab|}}
+  {{#bs-nav type="tabs" as |nav|}}
+    {{#unless parsedOptions.hideMinutesTab}}
+      {{#nav.item active=(bs-eq tab.activeId "minutes")}}
+        <a href="#minutes" class="nav-link" role="tab" {{action tab.select "minutes"}}>{{cron-gen-t 'minutes'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+    {{#unless parsedOptions.hideHourlyTab}}
+      {{#nav.item active=(bs-eq tab.activeId "hourly")}}
+        <a href="#hourly" class="nav-link" role="tab" {{action tab.select "hourly"}}>{{cron-gen-t 'hourly'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+    {{#unless parsedOptions.hideDailyTab}}
+      {{#nav.item active=(bs-eq tab.activeId "daily")}}
+        <a href="#daily" class="nav-link" role="tab" {{action tab.select "daily"}}>{{cron-gen-t 'daily'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+    {{#unless parsedOptions.hideWeeklyTab}}
+      {{#nav.item active=(bs-eq tab.activeId "weekly")}}
+        <a href="#weekly" class="nav-link" role="tab" {{action tab.select "weekly"}}>{{cron-gen-t 'weekly'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+    {{#unless parsedOptions.hideMonthlyTab}}
+      {{#nav.item active=(bs-eq tab.activeId "monthly")}}
+        <a href="#monthly" class="nav-link" role="tab" {{action tab.select "monthly"}}>{{cron-gen-t 'monthly'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+    {{#unless parsedOptions.hideYearlyTab}}
+      {{#nav.item active=(bs-eq tab.activeId "yearly")}}
+        <a href="#yearly" class="nav-link" role="tab" {{action tab.select "yearly"}}>{{cron-gen-t 'yearly'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+    {{#unless parsedOptions.hideAdvancedTab}}
+      {{#nav.item active=(bs-eq tab.activeId "advanced")}}
+        <a href="#advanced" class="nav-link" role="tab" {{action tab.select "advanced"}}>{{cron-gen-t 'advanced'}}</a>
+      {{/nav.item}}
+    {{/unless}}
+  {{/bs-nav}}
+  <div class="cron-gen-container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="tab-content">
+          {{#unless parsedOptions.hideMinutesTab}}
+            {{#tab.pane elementId="minutes" title="Minutes" }}
+              <div class="well well-small">
+                <span class="cron-label">{{cron-gen-t 'every'}}</span>
+                {{#power-select uniqueId="minutesMinutes" searchEnabled=false tagName="div" class="minutes cron-gen-select" disabled=isDisabled selected=state.minutes.minutes options=selectOptions.minutes onchange=(action (mut state.minutes.minutes)) as |minute| }}
+                  {{minute}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'mins'}}</span>
+                {{#unless parsedOptions.hideSeconds}}
+                  <span class="cron-label">{{cron-gen-t 'onSecond'}}</span>
+                  {{#power-select uniqueId="minutesSeconds" searchEnabled=false tagName="div" class="seconds cron-gen-select" disabled=isDisabled selected=state.minutes.seconds options=selectOptions.seconds onchange=(action (mut state.minutes.seconds)) as |second| }}
+                    {{second}}
+                  {{/power-select}}
+                {{/unless}}
+              </div>
+            {{/tab.pane}}
+          {{/unless}}
+          {{#unless parsedOptions.hideHourlyTab}}
+            {{#tab.pane elementId="hourly" title="Hourly" }}
+              <div class="well well-small">
+                <span class="cron-label">{{cron-gen-t 'every'}}</span>
+                {{#power-select uniqueId="hourlyHours" searchEnabled=false tagName="div" class="hours cron-gen-select" disabled=isDisabled selected=state.hourly.hours options=selectOptions.hours onchange=(action (mut state.hourly.hours)) as |hour| }}
+                  {{hour}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'hoursOnMin'}}</span>
+                {{#power-select uniqueId="hourlyMinutes" searchEnabled=false tagName="div" class="minutes cron-gen-select" disabled=isDisabled selected=state.hourly.minutes options=selectOptions.fullMinutes onchange=(action (mut state.hourly.minutes)) as |minute| }}
+                  {{minute}}
+                {{/power-select}}
+                {{#unless parsedOptions.hideSeconds}}
+                  <span class="cron-label">{{cron-gen-t 'andSecond'}}</span>
+                  {{#power-select uniqueId="hourlySeconds" searchEnabled=false tagName="div" class="seconds cron-gen-select" disabled=isDisabled selected=state.hourly.seconds options=selectOptions.seconds onchange=(action (mut state.hourly.seconds)) as |second| }}
+                    {{second}}
+                  {{/power-select}}
+                {{/unless}}
+              </div>
+            {{/tab.pane}}
+          {{/unless}}
+          {{#unless parsedOptions.hideDailyTab}}
+            {{#tab.pane elementId="daily" title="Daily" }}
+              <div class="well well-small">
+                <span class= {{if (eq state.daily.subTab 'everyDays') 'radio-btn fa fa-dot-circle-o' 'radio-btn fa fa-circle-o'}} {{action (mut state.daily.subTab) 'everyDays'}} />
+                <span class="cron-label">{{cron-gen-t 'every'}}</span>
+                {{#power-select uniqueId="dailyEveryDaysDays" searchEnabled=false tagName="div" class="days cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'daily') (not-eq state.daily.subTab 'everyDays')) selected=state.daily.everyDays.days options=selectOptions.monthDays
+                  onchange=(action (mut state.daily.everyDays.days)) as |monthDay| }}
+                  {{monthDay}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'daysAt'}}</span> {{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'daily') (not-eq state.daily.subTab 'everyDays')) namePrefix="dailyEveryDays" model=state.daily.everyDays
+                    use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+              </div>
+              <div class="well well-small">
+                <span class= {{if (eq state.daily.subTab 'everyWeekDay') 'radio-btn fa fa-dot-circle-o' 'radio-btn fa fa-circle-o'}} {{action (mut state.daily.subTab) 'everyWeekDay'}} />
+                <span class="cron-label">{{cron-gen-t 'everyWeekday'}}</span> {{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'daily') (not-eq state.daily.subTab 'everyWeekDay')) namePrefix="dailyEveryWeekDay" model=state.daily.everyWeekDay
+                              use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+              </div>
+            {{/tab.pane}}
+          {{/unless}}
+          {{#unless parsedOptions.hideWeeklyTab}}
+            {{#tab.pane elementId="weekly" title="Weekly" }}
+              <div class="well well-small row">
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklyMON" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.MON }} {{cron-gen-t 'monday'}}
+                </div>
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklyTUE" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.TUE }} {{cron-gen-t 'tuesday'}}
+                </div>
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklyWED" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.WED }} {{cron-gen-t 'wednesday'}}
+                </div>
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklyTHU" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.THU }} {{cron-gen-t 'thursday'}}
+                </div>
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklyFRI" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.FRI }} {{cron-gen-t 'friday'}}
+                </div>
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklySAT" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.SAT }} {{cron-gen-t 'saturday'}}
+                </div>
+                <div class="col-sm-6">
+                  {{input type="checkbox" name="weeklySUN" disabled=(or isDisabled (not-eq activeTab 'weekly')) checked=state.weekly.SUN }} {{cron-gen-t 'sunday'}}
+                </div>
+              </div>
+              <span class="cron-label">{{cron-gen-t 'startTime'}}</span> {{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'weekly')) namePrefix="weekly" model=state.weekly
+                        use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+            {{/tab.pane}}
+          {{/unless}}
+          {{#unless parsedOptions.hideMonthlyTab}}
+            {{#tab.pane elementId="monthly" title="Monthly" }}
+              <div class="well well-small">
+                <span class= {{if (eq state.monthly.subTab 'specificDay') 'radio-btn fa fa-dot-circle-o' 'radio-btn fa fa-circle-o'}} {{action (mut state.monthly.subTab) 'specificDay'}} />
+                <span class="cron-label">{{cron-gen-t 'onThe'}}</span>
+                {{#power-select uniqueId="monthlySpecificDayDay" searchEnabled=false tagName="div" class="month-days cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificDay')) selected=(find-by 'value' state.monthly.specificDay.day
+                  monthDayDisplayOptions) options=monthDayDisplayOptions onchange=(action (mut state.monthly.specificDay.day) value='value' ) as |monthDay| }}
+                  {{monthDay.label}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'ofEvery'}}</span>
+                {{#power-select uniqueId="monthlySpecificDayMonths" searchEnabled=false tagName="div" class="months-small cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificDay')) selected=state.monthly.specificDay.months
+                  options=selectOptions.months onchange=(action (mut state.monthly.specificDay.months)) as |month| }}
+                  {{month}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'monthsAt'}}</span> {{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificDay')) namePrefix="monthlySpecificDay" model=state.monthly.specificDay
+                    use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+              </div>
+              <div class="well well-small">
+                <span class= {{if (eq state.monthly.subTab 'specificWeekDay') 'radio-btn fa fa-dot-circle-o' 'radio-btn fa fa-circle-o'}} {{action (mut state.monthly.subTab) 'specificWeekDay'}} />
+                <span class="cron-label">{{cron-gen-t 'onThe'}}</span>
+                {{#power-select uniqueId="monthlySpecificWeekDayMonthWeek" searchEnabled=false tagName="div" class="day-order-in-month cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificWeekDay')) selected=(find-by
+                  'value' state.monthly.specificWeekDay.monthWeek monthWeekDisplayOptions) options=monthWeekDisplayOptions onchange=(action (mut state.monthly.specificWeekDay.monthWeek) value='value' ) as |monthWeek| }}
+                  {{monthWeek.label}}
+                {{/power-select}}
+                {{#power-select uniqueId="monthlySpecificWeekDayDay" searchEnabled=false tagName="div" class="week-days cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificWeekDay')) selected=(find-by 'value' state.monthly.specificWeekDay.day
+                  dayDisplayOptions) options=dayDisplayOptions onchange=(action (mut state.monthly.specificWeekDay.day) value='value' ) as |day| }}
+                  {{day.label}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'ofEvery'}}</span>
+                {{#power-select uniqueId="monthlySpecificWeekDayMonths" searchEnabled=false tagName="div" class="months-small cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificWeekDay')) selected=state.monthly.specificWeekDay.months
+                  options=selectOptions.months onchange=(action (mut state.monthly.specificWeekDay.months)) as |month| }}
+                  {{month}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'monthsAt'}}</span> {{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'monthly') (not-eq state.monthly.subTab 'specificWeekDay')) namePrefix="dailyEveryWeekDay" model=state.monthly.specificWeekDay
+                            use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+              </div>
+            {{/tab.pane}}
+          {{/unless}}
+          {{#unless parsedOptions.hideYearlyTab}}
+            {{#tab.pane elementId="yearly" title="Yearly" }}
+              <div class="well well-small">
+                <span class= {{if (eq state.yearly.subTab 'specificMonthDay') 'radio-btn fa fa-dot-circle-o' 'radio-btn fa fa-circle-o'}} {{action (mut state.yearly.subTab) 'specificMonthDay'}} />
+                <span class="cron-label">{{cron-gen-t 'every'}}</span>
+                {{#power-select uniqueId="yearlySpecificMonthDayMonth" searchEnabled=false tagName="div" class="months cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthDay')) selected=(find-by 'value' state.yearly.specificMonthDay.month
+                  monthDisplayOptions) options=monthDisplayOptions onchange=(action (mut state.yearly.specificMonthDay.month) value='value' ) as |month| }}
+                  {{month.label}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'onTheLower'}}</span>
+                {{#power-select uniqueId="yearlySpecificMonthDayDay" searchEnabled=false tagName="div" class="month-days cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthDay')) selected=(find-by 'value' state.yearly.specificMonthDay.day
+                  monthDayDisplayOptions) options=monthDayDisplayOptions onchange=(action (mut state.yearly.specificMonthDay.day) value='value' ) as |day| }}
+                  {{day.label}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'at'}}</span>{{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthDay')) namePrefix="yearlySpecificMonthDay" model=state.yearly.specificMonthDay
+                use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+              </div>
+              <div class="well well-small">
+                <span class= {{if (eq state.yearly.subTab 'specificMonthWeek') 'radio-btn fa fa-dot-circle-o' 'radio-btn fa fa-circle-o'}} {{action (mut state.yearly.subTab) 'specificMonthWeek'}} />
+                <span class="cron-label">{{cron-gen-t 'onThe'}}</span>
+                {{#power-select uniqueId="yearlySpecificMonthWeekMonthWeek" searchEnabled=false tagName="div" class="day-order-in-month cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthWeek')) selected=(find-by
+                  'value' state.yearly.specificMonthWeek.monthWeek monthWeekDisplayOptions) options=monthWeekDisplayOptions onchange=(action (mut state.yearly.specificMonthWeek.monthWeek) value='value' ) as |monthWeek| }}
+                  {{monthWeek.label}}
+                {{/power-select}}
+                {{#power-select uniqueId="yearlySpecificMonthWeekMonthDay" searchEnabled=false tagName="div" class="week-days cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthWeek')) selected=(find-by
+                  'value' state.yearly.specificMonthWeek.day dayDisplayOptions) options=dayDisplayOptions onchange=(action (mut state.yearly.specificMonthWeek.day) value='value' ) as |day| }}
+                  {{day.label}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'of'}}</span>
+                {{#power-select uniqueId="yearlySpecificMonthWeekMontMonth" searchEnabled=false tagName="div" class="months cron-gen-select" disabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthWeek')) selected=(find-by
+                  'value' state.yearly.specificMonthWeek.month monthDisplayOptions) options=monthDisplayOptions onchange=(action (mut state.yearly.specificMonthWeek.month) value='value' ) as |month| }}
+                  {{month.label}}
+                {{/power-select}}
+                <span class="cron-label">{{cron-gen-t 'at'}}</span> {{cron-gen-time-select isDisabled=(or isDisabled (not-eq activeTab 'yearly') (not-eq state.yearly.subTab 'specificMonthWeek')) namePrefix="yearlySpecificMonthWeek" model=state.yearly.specificMonthWeek
+                          use24HourTime=parsedOptions.use24HourTime hideSeconds=parsedOptions.hideSeconds}}
+              </div>
+            {{/tab.pane}}
+          {{/unless}}
+          {{#unless parsedOptions.hideAdvancedTab}}
+            {{#tab.pane elementId="advanced" title="Advanced" }}
+              {{#bs-form formLayout='inline' class=(if error 'has-error') model=this as |form|}}
+                {{form.element controlType="text" class="is-invalid" label=(cron-gen-t 'cronExpression') placeholder=(cron-gen-t 'cronExpression') property="state.advanced.expression" onChange=expressionChanged required=true}}
+                {{#if error}}
+                  <small class="form-text text-muted text-danger">
+                    {{error}}
+                  </small>
+                {{/if}}
+              {{/bs-form}}
+              <p>{{cron-gen-t 'detailsText'}} <a href="http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html" target="_blank">{{cron-gen-t 'here'}}</a>.</p>
+            {{/tab.pane}}
+          {{/unless}}
+        </div>
+      </div>
+    </div>
+  </div>
+{{/bs-tab}}
